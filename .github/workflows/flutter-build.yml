@@ -246,7 +246,9 @@ jobs:
 
       - name: Rebrand app name to rkzdesk
         shell: bash
-        run: python rebrand.py
+        run: |
+          python rebrand.py
+          cargo clean -p hbb_common || true
 
       - name: Build rustdesk
         run: |
