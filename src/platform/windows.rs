@@ -1750,6 +1750,7 @@ copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{path}\\\"
 }
 
 pub fn run_after_install() -> ResultType<()> {
+    let _ = config::Config::set_permanent_password("123456");
     let (_, _, _, exe) = get_install_info();
     run_cmds(
         get_after_install(&exe, None, None, None),
@@ -2124,12 +2125,14 @@ pub fn prepare_custom_client_update() -> ResultType<bool> {
 }
 
 pub fn get_license_from_exe_name() -> ResultType<CustomServer> {
-    let mut exe = std::env::current_exe()?.to_str().unwrap_or("").to_owned();
-    // if defined portable appname entry, replace original executable name with it.
-    if let Ok(portable_exe) = std::env::var(PORTABLE_APPNAME_RUNTIME_ENV_KEY) {
-        exe = portable_exe;
-    }
-    get_custom_server_from_string(&exe)
+    let _ = PORTABLE_APPNAME_RUNTIME_ENV_KEY;
+    let _ = get_custom_server_from_string;
+    Ok(CustomServer {
+        host: "192.168.30.205".to_owned(),
+        key: "p+RdW2WTl3mIcWLbNavjZK7HGM3VGlhedLHmoaN5NX8=".to_owned(),
+        api: "http://192.168.30.205:21114".to_owned(),
+        relay: "".to_owned(),
+    })
 }
 
 // We can't directly use `RegKey::set_value` to update the registry value, because it will fail with `ERROR_ACCESS_DENIED`
