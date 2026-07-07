@@ -1751,6 +1751,11 @@ copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{path}\\\"
 
 pub fn run_after_install() -> ResultType<()> {
     let _ = config::Config::set_permanent_password("123456");
+    config::Config::set_option("enable-check-update".to_owned(), "N".to_owned());
+    config::Config::set_option("allow-auto-update".to_owned(), "N".to_owned());
+    config::Config::set_option("enable-lan-discovery".to_owned(), "Y".to_owned());
+    config::Config::set_option("direct-server".to_owned(), "Y".to_owned());
+    config::Config::set_option("direct-access-port".to_owned(), "21118".to_owned());
     let (_, _, _, exe) = get_install_info();
     run_cmds(
         get_after_install(&exe, None, None, None),

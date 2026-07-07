@@ -244,6 +244,10 @@ jobs:
         shell: bash
         run: echo "SODIUM_LIB_DIR=$VCPKG_ROOT/installed/${{ matrix.job.vcpkg-triplet }}/lib" >> "$GITHUB_ENV"
 
+      - name: Rebrand app name to rkzdesk
+        shell: bash
+        run: sed -i 's/APP_NAME: RwLock<String> = RwLock::new("RustDesk"/APP_NAME: RwLock<String> = RwLock::new("rkzdesk"/' libs/hbb_common/src/config.rs
+
       - name: Build rustdesk
         run: |
           # Windows: build RustDesk
