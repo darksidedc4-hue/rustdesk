@@ -246,7 +246,8 @@ jobs:
 
       - name: Rebrand app name to rkzdesk
         shell: bash
-        run: sed -i 's/APP_NAME: RwLock<String> = RwLock::new("RustDesk"/APP_NAME: RwLock<String> = RwLock::new("rkzdesk"/' libs/hbb_common/src/config.rs
+        run: |
+          sed -i 's/APP_NAME: RwLock<String> = RwLock::new("RustDesk"/APP_NAME: RwLock<String> = RwLock::new("rkzdesk"/' libs/hbb_common/src/config.rs
 
       - name: Build rustdesk
         run: |
