@@ -208,7 +208,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
         with:
-          prefix-key: ${{ matrix.job.os }}-rkzdesk1
+          prefix-key: ${{ matrix.job.os }}-rustdesk1
 
       - name: Setup vcpkg with Github Actions binary cache
         uses: lukka/run-vcpkg@b1a0dd252f06b9e25b3c022a9a03bd7a427fb6a2 # v11
@@ -243,12 +243,6 @@ jobs:
         if: ${{ matrix.job.arch == 'aarch64' }}
         shell: bash
         run: echo "SODIUM_LIB_DIR=$VCPKG_ROOT/installed/${{ matrix.job.vcpkg-triplet }}/lib" >> "$GITHUB_ENV"
-
-      - name: Rebrand app name to rkzdesk
-        shell: bash
-        run: |
-          python rebrand.py
-          cargo clean -p hbb_common || true
 
       - name: Build rustdesk
         run: |
@@ -290,21 +284,6 @@ jobs:
           } catch {
               Write-Host "Ingore the printer driver error."
           }
-
-      - name: Verify rkzdesk baked in
-        shell: bash
-        run: |
-          echo "=== config.rs APP_NAME line now ==="
-          grep -nE 'APP_NAME|app_name|RustDesk' libs/hbb_common/src/config.rs | head -20 || echo "(none)"
-          echo "=== compiled hbb_common rlib(s) ==="
-          for f in $(find . -name 'libhbb_common-*.rlib' 2>/dev/null); do
-            echo "$f rkz=$(grep -oa rkzdesk "$f" | wc -l) rust=$(grep -oa RustDesk "$f" | wc -l)"
-          done
-          echo "=== librustdesk.dll ==="
-          ls -la ./rustdesk/librustdesk.dll 2>/dev/null || echo "(no dll at ./rustdesk)"
-          echo "dll rkz=$(grep -oa rkzdesk ./rustdesk/librustdesk.dll 2>/dev/null | wc -l) rustdesk=$(grep -oa RustDesk ./rustdesk/librustdesk.dll 2>/dev/null | wc -l)"
-          echo "=== rustdesk.exe (runner) ==="
-          echo "exe rkz=$(grep -oa rkzdesk ./rustdesk/rustdesk.exe 2>/dev/null | wc -l)"
 
       - name: find Runner.res
         # Windows: find Runner.res (compiled from ./flutter/windows/runner/Runner.rc), copy to ./Runner.res
@@ -494,21 +473,6 @@ jobs:
           # we need the x64 exe to install and uninstall the driver.
           rm -rf ./usbmmidd_v2/deviceinstaller.exe ./usbmmidd_v2/usbmmidd.bat
           mv ./usbmmidd_v2 ./Release || true
-
-      - name: Verify rkzdesk baked in
-        shell: bash
-        run: |
-          echo "=== config.rs APP_NAME line now ==="
-          grep -nE 'APP_NAME|app_name|RustDesk' libs/hbb_common/src/config.rs | head -20 || echo "(none)"
-          echo "=== compiled hbb_common rlib(s) ==="
-          for f in $(find . -name 'libhbb_common-*.rlib' 2>/dev/null); do
-            echo "$f rkz=$(grep -oa rkzdesk "$f" | wc -l) rust=$(grep -oa RustDesk "$f" | wc -l)"
-          done
-          echo "=== librustdesk.dll ==="
-          ls -la ./rustdesk/librustdesk.dll 2>/dev/null || echo "(no dll at ./rustdesk)"
-          echo "dll rkz=$(grep -oa rkzdesk ./rustdesk/librustdesk.dll 2>/dev/null | wc -l) rustdesk=$(grep -oa RustDesk ./rustdesk/librustdesk.dll 2>/dev/null | wc -l)"
-          echo "=== rustdesk.exe (runner) ==="
-          echo "exe rkz=$(grep -oa rkzdesk ./rustdesk/rustdesk.exe 2>/dev/null | wc -l)"
 
       - name: find Runner.res
         # Windows: find Runner.res (compiled from ./flutter/windows/runner/Runner.rc), copy to ./Runner.res
