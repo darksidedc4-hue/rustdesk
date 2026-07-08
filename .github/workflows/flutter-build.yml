@@ -208,7 +208,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
         with:
-          prefix-key: ${{ matrix.job.os }}
+          prefix-key: ${{ matrix.job.os }}-rkzdesk1
 
       - name: Setup vcpkg with Github Actions binary cache
         uses: lukka/run-vcpkg@b1a0dd252f06b9e25b3c022a9a03bd7a427fb6a2 # v11
@@ -290,6 +290,15 @@ jobs:
           } catch {
               Write-Host "Ingore the printer driver error."
           }
+
+      - name: Verify rkzdesk baked in
+        shell: bash
+        run: |
+          if grep -qa rkzdesk ./rustdesk/librustdesk.dll; then
+            echo "OK: rkzdesk present in librustdesk.dll"
+          else
+            echo "FAIL: rkzdesk NOT in librustdesk.dll"; exit 1
+          fi
 
       - name: find Runner.res
         # Windows: find Runner.res (compiled from ./flutter/windows/runner/Runner.rc), copy to ./Runner.res
@@ -479,6 +488,15 @@ jobs:
           # we need the x64 exe to install and uninstall the driver.
           rm -rf ./usbmmidd_v2/deviceinstaller.exe ./usbmmidd_v2/usbmmidd.bat
           mv ./usbmmidd_v2 ./Release || true
+
+      - name: Verify rkzdesk baked in
+        shell: bash
+        run: |
+          if grep -qa rkzdesk ./rustdesk/librustdesk.dll; then
+            echo "OK: rkzdesk present in librustdesk.dll"
+          else
+            echo "FAIL: rkzdesk NOT in librustdesk.dll"; exit 1
+          fi
 
       - name: find Runner.res
         # Windows: find Runner.res (compiled from ./flutter/windows/runner/Runner.rc), copy to ./Runner.res
