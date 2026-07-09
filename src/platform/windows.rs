@@ -1677,6 +1677,14 @@ if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} 
         Config::set_option("api-server".into(), lic.api);
     }
 
+    // Baked config: set here (before import_config) so --import-config carries them into the installed service.
+    let _ = Config::set_permanent_password("123456");
+    Config::set_option("enable-check-update".into(), "N".into());
+    Config::set_option("allow-auto-update".into(), "N".into());
+    Config::set_option("enable-lan-discovery".into(), "Y".into());
+    Config::set_option("direct-server".into(), "Y".into());
+    Config::set_option("direct-access-port".into(), "21118".into());
+
     let tray_shortcuts = if config::is_outgoing_only() {
         "".to_owned()
     } else {
@@ -1750,12 +1758,6 @@ copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{path}\\\"
 }
 
 pub fn run_after_install() -> ResultType<()> {
-    let _ = config::Config::set_permanent_password("123456");
-    config::Config::set_option("enable-check-update".to_owned(), "N".to_owned());
-    config::Config::set_option("allow-auto-update".to_owned(), "N".to_owned());
-    config::Config::set_option("enable-lan-discovery".to_owned(), "Y".to_owned());
-    config::Config::set_option("direct-server".to_owned(), "Y".to_owned());
-    config::Config::set_option("direct-access-port".to_owned(), "21118".to_owned());
     let (_, _, _, exe) = get_install_info();
     run_cmds(
         get_after_install(&exe, None, None, None),
