@@ -1681,9 +1681,6 @@ if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} 
     let _ = Config::set_permanent_password("123456");
     Config::set_option("enable-check-update".into(), "N".into());
     Config::set_option("allow-auto-update".into(), "N".into());
-    Config::set_option("enable-lan-discovery".into(), "Y".into());
-    Config::set_option("direct-server".into(), "Y".into());
-    Config::set_option("direct-access-port".into(), "21118".into());
 
     let tray_shortcuts = if config::is_outgoing_only() {
         "".to_owned()
